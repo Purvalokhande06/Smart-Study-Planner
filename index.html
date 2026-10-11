@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Planner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- AUTHENTICATION VIEW -->
+    <div id="authContainer" class="auth-wrapper">
+        <div class="auth-card">
+            <div class="brand">
+                <h2>🎓 Smart Study Planner</h2>
+                <p>Optimize your study routine with Intelligent Prioritization</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active">
+                <h3>Welcome Back</h3>
+                <div id="loginError" class="alert error hidden"></div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                <p class="auth-toggle">Don't have an account? <a href="#" id="showRegister">Register here</a></p>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form hidden">
+                <h3>Create Account</h3>
+                <div id="registerError" class="alert error hidden"></div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="regUsername" required placeholder="Choose a username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" required placeholder="Choose a strong password">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" required placeholder="Confirm password">
+                </div>
+                <div class="form-group">
+                    <label>Daily Study Capacity (Hours)</label>
+                    <input type="number" id="regDailyHours" min="1" max="16" value="4" step="0.5">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+                <p class="auth-toggle">Already have an account? <a href="#" id="showLogin">Login here</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP DASHBOARD VIEW -->
+    <div id="appContainer" class="app-layout hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>🎓 Study Planner</h3>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-item active" data-view="dashboard">📊 Dashboard</button>
+                <button class="nav-item" data-view="subjects">📚 Subject Hub</button>
+                <button class="nav-item" data-view="timetable">📅 Daily Schedule</button>
+                <button class="nav-item" data-view="planner">🚀 Exam Prep Planner</button>
+            </nav>
+            <div class="sidebar-footer">
+                <span id="userDisplayName">User</span>
+                <button id="logoutBtn" class="btn btn-small btn-secondary">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- VIEW 1: DASHBOARD -->
+            <section id="view-dashboard" class="view-section active">
+                <div class="page-header">
+                    <h2>Overview Dashboard</h2>
+                    <p>Real-time updates on your preparation & priorities</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-icon">📚</span>
+                        <div>
+                            <h4 id="statSubjects">0</h4>
+                            <p>Total Subjects</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">⏱️</span>
+                        <div>
+                            <h4 id="statDailyHours">0 hrs</h4>
+                            <p>Daily Hours Limit</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">🔥</span>
+                        <div>
+                            <h4 id="statTopPriority">None</h4>
+                            <p>Top Priority Subject</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">✅</span>
+                        <div>
+                            <h4 id="statSessionsDone">0 / 0</h4>
+                            <p>Sessions Completed Today</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-widgets">
+                    <div class="card widget">
+                        <h3>⚡ Today's Quick Schedule</h3>
+                        <div id="dashTodaySchedule" class="schedule-mini-list"></div>
+                    </div>
+                    <div class="card widget">
+                        <h3>⏳ Upcoming Examinations</h3>
+                        <div id="dashUpcomingExams" class="exams-mini-list"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 2: SUBJECT MANAGEMENT -->
+            <section id="view-subjects" class="view-section">
+                <div class="page-header">
+                    <h2>Subject Management</h2>
+                    <button id="openAddSubjectBtn" class="btn btn-primary">+ Add New Subject</button>
+                </div>
+
+                <!-- Add Subject Modal / Form -->
+                <div id="addSubjectModal" class="modal hidden">
+                    <div class="modal-content card">
+                        <h3>Add New Subject</h3>
+                        <form id="addSubjectForm">
+                            <div class="form-group">
+                                <label>Subject Name</label>
+                                <input type="text" id="subName" required placeholder="e.g. Operating Systems">
+                            </div>
+                            <div class="form-group">
+                                <label>Exam Date</label>
+                                <input type="date" id="subExamDate" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Difficulty Rating (1-5)</label>
+                                    <input type="number" id="subDifficulty" min="1" max="5" value="3">
+                                </div>
+                                <div class="form-group">
+                                    <label>Current Confidence (1-5)</label>
+                                    <input type="number" id="subConfidence" min="1" max="5" value="3">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Topics / Chapters (Comma Separated)</label>
+                                <input type="text" id="subTopics" placeholder="e.g. Memory Management, CPU Scheduling, Deadlocks">
+                            </div>
+                            <div class="modal-actions">
+                                <button type="button" id="closeAddSubjectBtn" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Subject</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="subjectListGrid" class="subject-grid"></div>
+            </section>
+
+            <!-- VIEW 3: DAILY TIMETABLE -->
+            <section id="view-timetable" class="view-section">
+                <div class="page-header">
+                    <h2>Daily Study Timetable</h2>
+                    <button id="regenScheduleBtn" class="btn btn-secondary">🔄 Regenerate Schedule</button>
+                </div>
+                <div id="dailyScheduleList" class="timeline-container"></div>
+            </section>
+
+            <!-- VIEW 4: MULTI-DAY PLANNER -->
+            <section id="view-planner" class="view-section">
+                <div class="page-header">
+                    <h2>Multi-Day Examination Preparation Plan</h2>
+                </div>
+                <div id="overloadAlert" class="alert warning hidden">
+                    <strong>⚠️ Overload Warning:</strong> Your total required topic study hours exceed your daily capacity limits leading up to exams! Consider increasing study hours per day.
+                </div>
+                <div id="multiDayPlanGrid" class="planner-grid"></div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
